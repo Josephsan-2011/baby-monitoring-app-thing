@@ -1,54 +1,73 @@
 img = ""
 status1 = ""
+objects = []
 
 function preload() {
-    img = loadImage("https://stylesatlife.com/wp-content/uploads/2020/03/Different-Types-of-Fruits.jpg")
+    song = loadSound("alarm.mp3")
 }
 
 function setup() {
     canvas = createCanvas(650, 450)
     canvas.center()
+    video = createCapture(VIDEO)
+    video.size(650, 450)
+    video.hide()
     objDetector = ml5.objectDetector("cocossd", model_loaded)
     document.getElementById("status").innerHTML = "status= detecting objects"
 }
 
 function draw() {
-    if (objects[i].label == "person") {
-        document.getElementById("number_of_objects").innerHTML = "Baby Found";
-        console.log("stop");
-        song.stop();
-    } else {
-        document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
-        console.log("play");
-        song.play();
+    image(video, 0, 0, 650, 450)
+    if (status1 != "") {
+        objDetector.detect(video, got_results)
+        r = random(255)
+        g = random(255)
+        b = random(255)
+        for (let index = 0; index < objects.length; index++) {
+
+            document.getElementById("status").innerHTML = "status= object detecting"
+            document.getElementById("numberOfObjects").innerHTML = "Number Of Objects Is Detecting " + objects.length
+            fill(r, g, b)
+            percent = floor(objects[index].confidence * 100)
+            text(objects[index].label + " " + percent + "%", objects[index].x, objects[index].y)
+            noFill()
+            stroke(r, g, b)
+            rect(objects[index].x, objects[index].y, objects[index].width, objects[index].height)
+            if (objects[index].label == "person") {
+                document.getElementById("number_of_objects").innerHTML = "Baby Found";
+                console.log("stop");
+                song.stop();
+            } else {
+                document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
+                console.log("play");
+                song.play();
+
+            }
+            if (objects.length == 0) {
+                document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
+                console.log("play");
+                song.play();
+            }
+
+        }
     }
+
 }
-if (objects.length == 0) {
-    document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
-    console.log("play");
-    song.play();
-}
-image(img, 0, 0, 650, 450)
-fill("white")
-text("dog", 45, 75)
-noFill()
-stroke("red")
-rect(30, 60, 450, 350)
-fill("white")
-text("cat", 300, 75)
-noFill()
-stroke("red")
-rect(300, 60, 350, 350)
+
+
 
 
 function model_loaded() {
     console.log("Model Is Loaded")
     status1 = true;
-    objDetector.detect(img, got_results)
+    objDetector.detect(video, got_results)
 }
 
 function got_results(error, results) {
     if (error) {
         console.log(error)
-    } else(console.log(results))
+    } else {
+        console.log(results) 
+        objects = results
+    }
 }
