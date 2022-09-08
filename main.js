@@ -34,17 +34,17 @@ function draw() {
             stroke(r, g, b)
             rect(objects[index].x, objects[index].y, objects[index].width, objects[index].height)
             if (objects[index].label == "person") {
-                document.getElementById("number_of_objects").innerHTML = "Baby Found";
+                document.getElementById("numberOfObjects").innerHTML = "Baby Found";
                 console.log("stop");
                 song.stop();
             } else {
-                document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
+                document.getElementById("numberOfObjects").innerHTML = "Baby Not Found";
                 console.log("play");
                 song.play();
 
             }
             if (objects.length == 0) {
-                document.getElementById("number_of_objects").innerHTML = "Baby Not Found";
+                document.getElementById("numberOfObjects").innerHTML = "Baby Not Found";
                 console.log("play");
                 song.play();
             }
